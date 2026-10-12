@@ -1,0 +1,250 @@
+{
+  "itw/clean/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.57945,
+    "eer": 0.42500000000000004,
+    "eer_threshold": 0.8318801522254944,
+    "f1_at_eer": 0.575,
+    "f1_at_05": 0.6477024070021882,
+    "tpr_at_fpr1": 0.02,
+    "prec_at_fpr1": 0.6666666666666666,
+    "tpr_at_fpr5": 0.05,
+    "prec_at_fpr5": 0.5555555555555556,
+    "ece": 0.29604714405828414,
+    "auc_ci": [
+      0.52881375,
+      0.633235
+    ],
+    "eer_ci": [
+      0.38,
+      0.4788124999999999
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "aasist",
+    "latency_ms_per_utt": 205.90878749499097,
+    "shards": [
+      "test-00000-of-00008.parquet",
+      "test-00005-of-00008.parquet"
+    ],
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/clean/aasist_l": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.6174875000000001,
+    "eer": 0.435,
+    "eer_threshold": 0.9808089733123779,
+    "f1_at_eer": 0.565,
+    "f1_at_05": 0.69921875,
+    "tpr_at_fpr1": 0.05,
+    "prec_at_fpr1": 0.8333333333333334,
+    "tpr_at_fpr5": 0.11,
+    "prec_at_fpr5": 0.6875,
+    "ece": 0.3245398417267552,
+    "auc_ci": [
+      0.567048125,
+      0.6693459374999999
+    ],
+    "eer_ci": [
+      0.38,
+      0.475
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "aasist_l",
+    "latency_ms_per_utt": 169.64277501392644,
+    "shards": [
+      "test-00000-of-00008.parquet",
+      "test-00005-of-00008.parquet"
+    ],
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/clean/spectra0": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.99775,
+    "eer": 0.012500000000000004,
+    "eer_threshold": 0.9675613641738892,
+    "f1_at_eer": 0.9875311720698254,
+    "f1_at_05": 0.9731051344743277,
+    "tpr_at_fpr1": 0.98,
+    "prec_at_fpr1": 0.9949238578680203,
+    "tpr_at_fpr5": 0.995,
+    "prec_at_fpr5": 0.9567307692307693,
+    "ece": 0.023272106563519603,
+    "auc_ci": [
+      0.99337375,
+      0.99995
+    ],
+    "eer_ci": [
+      0.005,
+      0.03
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "spectra0",
+    "latency_ms_per_utt": 1031.1892374884337,
+    "shards": [
+      "test-00000-of-00008.parquet",
+      "test-00005-of-00008.parquet"
+    ],
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/clean/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.997725,
+    "eer": 0.012500000000000004,
+    "eer_threshold": 0.9582334160804749,
+    "f1_at_eer": 0.9875311720698254,
+    "f1_at_05": 0.9731051344743277,
+    "tpr_at_fpr1": 0.98,
+    "prec_at_fpr1": 0.98989898989899,
+    "tpr_at_fpr5": 0.995,
+    "prec_at_fpr5": 0.961352657004831,
+    "ece": 0.022399920463745067,
+    "auc_ci": [
+      0.9934118749999999,
+      0.9999131250000001
+    ],
+    "eer_ci": [
+      0.0050000000000000044,
+      0.03
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 627.953625007649,
+    "shards": [
+      "test-00000-of-00008.parquet",
+      "test-00005-of-00008.parquet"
+    ],
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "asv19la/clean/aasist": {
+    "n": 308,
+    "n_pos": 154,
+    "auc": 0.9983133749367515,
+    "eer": 0.016233766233766236,
+    "eer_threshold": 0.0742872804403305,
+    "f1_at_eer": 0.9838187702265372,
+    "f1_at_05": 0.9594594594594594,
+    "tpr_at_fpr1": 0.9415584415584416,
+    "prec_at_fpr1": 0.9931506849315068,
+    "tpr_at_fpr5": 0.987012987012987,
+    "prec_at_fpr5": 0.9806451612903225,
+    "ece": 0.044513814505505775,
+    "auc_ci": [
+      0.9957191347613426,
+      0.9997691431944679
+    ],
+    "eer_ci": [
+      0.00649350649350644,
+      0.045454545454545435
+    ],
+    "dataset": "asv19la",
+    "condition": "clean",
+    "backend": "aasist",
+    "latency_ms_per_utt": 205.44618749408983,
+    "shards": [
+      "test-00000-of-00009.parquet",
+      "test-00006-of-00009.parquet"
+    ],
+    "subset": "stratified 308 utts (seed 0)"
+  },
+  "asv19la/clean/aasist_l": {
+    "n": 308,
+    "n_pos": 154,
+    "auc": 0.9991988530949569,
+    "eer": 0.022727272727272704,
+    "eer_threshold": 0.030786976218223572,
+    "f1_at_eer": 0.9773462783171522,
+    "f1_at_05": 0.976897689768977,
+    "tpr_at_fpr1": 0.9805194805194806,
+    "prec_at_fpr1": 0.993421052631579,
+    "tpr_at_fpr5": 1.0,
+    "prec_at_fpr5": 0.9746835443037974,
+    "ece": 0.025609212430291427,
+    "auc_ci": [
+      0.9975280401416765,
+      1.0
+    ],
+    "eer_ci": [
+      0.0,
+      0.03896103896103896
+    ],
+    "dataset": "asv19la",
+    "condition": "clean",
+    "backend": "aasist_l",
+    "latency_ms_per_utt": 171.01809999439865,
+    "shards": [
+      "test-00000-of-00009.parquet",
+      "test-00006-of-00009.parquet"
+    ],
+    "subset": "stratified 308 utts (seed 0)"
+  },
+  "asv19la/clean/spectra0": {
+    "n": 308,
+    "n_pos": 154,
+    "auc": 1.0,
+    "eer": 0.0,
+    "eer_threshold": 0.7641507983207703,
+    "f1_at_eer": 1.0,
+    "f1_at_05": 1.0,
+    "tpr_at_fpr1": 1.0,
+    "prec_at_fpr1": 1.0,
+    "tpr_at_fpr5": 1.0,
+    "prec_at_fpr5": 1.0,
+    "ece": 0.0015602994493791366,
+    "auc_ci": [
+      0.9999999999999999,
+      1.0
+    ],
+    "eer_ci": [
+      0.0,
+      0.0
+    ],
+    "dataset": "asv19la",
+    "condition": "clean",
+    "backend": "spectra0",
+    "latency_ms_per_utt": 1052.4853749957401,
+    "shards": [
+      "test-00000-of-00009.parquet",
+      "test-00006-of-00009.parquet"
+    ],
+    "subset": "stratified 308 utts (seed 0)"
+  },
+  "asv19la/clean/spectra0_int8": {
+    "n": 308,
+    "n_pos": 154,
+    "auc": 1.0,
+    "eer": 0.0,
+    "eer_threshold": 0.6973313093185425,
+    "f1_at_eer": 1.0,
+    "f1_at_05": 1.0,
+    "tpr_at_fpr1": 1.0,
+    "prec_at_fpr1": 1.0,
+    "tpr_at_fpr5": 1.0,
+    "prec_at_fpr5": 1.0,
+    "ece": 0.0016807918957839054,
+    "auc_ci": [
+      0.9999999999999999,
+      1.0
+    ],
+    "eer_ci": [
+      0.0,
+      0.0
+    ],
+    "dataset": "asv19la",
+    "condition": "clean",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 590.2227500046138,
+    "shards": [
+      "test-00000-of-00009.parquet",
+      "test-00006-of-00009.parquet"
+    ],
+    "subset": "stratified 308 utts (seed 0)"
+  }
+}
