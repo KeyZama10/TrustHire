@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+# data & models live outside the repo (~/.trusthire); never commit recordings or sessions
+data/sessions/
+data/custom/
+data/public/
+models/*
+!models/README.md
+*.onnx
+*.pth
+*.pt
+mlruns/
+# frontend
+frontend/node_modules/
+frontend/dist/
+# env
+.env
+*.log
