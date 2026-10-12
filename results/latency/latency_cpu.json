@@ -1,0 +1,27 @@
+{
+  "profile": "cpu",
+  "cpu": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "logical_cpus": 12,
+  "on_battery": false,
+  "window_s": 3.0,
+  "hop_s": 1.5,
+  "n_windows": 4,
+  "total_ms_p50": 1576.3366000028327,
+  "total_ms_p95": 9521.8663749285,
+  "real_time_factor": 1.0508910666685551,
+  "modules_ms_p50": {
+    "video_deepfake": 1077.8471999801695,
+    "voice_spoof": 1190.9964000806212,
+    "face_identity": 251.1499000247568,
+    "behavior": 492.7715000230819,
+    "av_sync": 1584.129499970004,
+    "voice_identity": 6182.873700046912,
+    "objects": 10165.987599873915
+  },
+  "peak_rss_mb": 1942.2,
+  "gpu_mem_mb": null,
+  "models": {
+    "video": "effnb4",
+    "audio": "spectra0_int8"
+  }
+}
