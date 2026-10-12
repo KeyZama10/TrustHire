@@ -173,6 +173,7 @@ class GBMStacker:
                 subsample_freq=1,
                 colsample_bytree=0.8,
                 min_child_samples=10,
+                n_jobs=4,
                 scale_pos_weight=spw,
                 random_state=self.seed,
                 verbose=-1,
@@ -257,8 +258,8 @@ class AttentionFusion:
         self,
         mods: tuple[str, ...] = MODS,
         context: int = 4,
-        epochs: int = 60,
-        lr: float = 3e-3,
+        epochs: int = 30,
+        lr: float = 5e-3,
         modality_dropout: float = 0.3,
         seed: int = 0,
     ):
@@ -300,8 +301,8 @@ class AttentionFusion:
         self.net.train()
         for _ in range(self.epochs):
             perm = torch.randperm(len(Y), generator=g)
-            for i in range(0, len(Y), 128):
-                idx = perm[i : i + 128]
+            for i in range(0, len(Y), 256):
+                idx = perm[i : i + 256]
                 p = P[idx].clone()
                 # modality dropout: teaches robustness to missing modules (never drop every present token)
                 drop = (torch.rand(p.shape[0], 1, p.shape[2], generator=g) < self.p_drop).float()

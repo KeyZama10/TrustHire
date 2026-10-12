@@ -30,7 +30,7 @@ export function Button({ children, onClick, disabled, variant = "primary", class
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-40",
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-40",
         variant === "primary" && "bg-teal-600 text-white hover:bg-teal-500",
         variant === "ghost" && "border border-slate-700 text-slate-200 hover:bg-slate-800",
         variant === "danger" && "bg-red-600 text-white hover:bg-red-500",

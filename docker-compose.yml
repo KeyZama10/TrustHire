@@ -1,0 +1,50 @@
+# docker compose up --build                 -> CPU stack on http://localhost:8080
+# docker compose --profile gpu up --build   -> adds the GPU inference API on :8001 (needs nvidia-container-toolkit)
+x-common: &common
+  env_file: [{path: .env, required: false}]
+  environment:
+    TRUSTHIRE_USE_CELERY: "true"
+    TRUSTHIRE_REDIS_URL: redis://redis:6379/0
+    TRUSTHIRE_SESSIONS_DIR: /data/sessions
+  volumes:
+    - models:/models
+    - data:/data
+
+services:
+  redis:
+    image: redis:8-alpine
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 10s}
+
+  api:
+    <<: *common
+    build: {context: ., dockerfile: docker/Dockerfile.api}
+    depends_on: {redis: {condition: service_healthy}}
+    ports: ["8000:8000"]
+    # WebRTC media flows over UDP between the browser and aiortc; host networking is simplest on Linux.
+    # On Docker Desktop keep the port mapping and use the browser on the same host.
+
+  worker:
+    <<: *common
+    build: {context: ., dockerfile: docker/Dockerfile.api}
+    depends_on: {redis: {condition: service_healthy}}
+    command: ["sh", "-c", "trusthire download-models && celery -A trusthire.worker.celery_app worker --loglevel=info --concurrency=1"]
+
+  frontend:
+    build: {context: ., dockerfile: docker/Dockerfile.frontend}
+    depends_on: [api]
+    ports: ["8080:80"]
+
+  gpu-inference:
+    <<: *common
+    profiles: ["gpu"]
+    build: {context: ., dockerfile: docker/Dockerfile.gpu}
+    depends_on: {redis: {condition: service_healthy}}
+    ports: ["8001:8000"]
+    deploy:
+      resources:
+        reservations:
+          devices: [{driver: nvidia, count: 1, capabilities: [gpu]}]
+
+volumes:
+  models:
+  data:

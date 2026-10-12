@@ -8,15 +8,17 @@ already-emitted timeline points that overlap the utterance.
 from __future__ import annotations
 
 import logging
+import pickle
 import threading
 import time
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
+from trusthire.common.registry import models_dir
 from trusthire.common.types import Modality, ModuleOutput
 from trusthire.transcript import features as feat
 
@@ -66,6 +68,7 @@ class TranscriptMonitor:
         self._pending: list[Future] = []
         self._lock = threading.Lock()
         self.resume_index: ResumeIndex | None = None
+        self._learned: Any = None
         if resume_text:
             self.set_resume(resume_text)
 
@@ -143,7 +146,7 @@ class TranscriptMonitor:
                 from trusthire.transcript.nlp import AITextDetector
 
                 ai_p = AITextDetector.get().prob_ai(tr.text)
-            score = feat.scripted_prior_score(f, ai_p)
+            score = self._score(f, ai_p)
             conf = float(np.clip(f.n_words / 40.0, 0.1, 1.0)) * 0.8
             ts, te = tr.words[0].start, tr.words[-1].end
             lat = (time.perf_counter() - tic) * 1e3
@@ -194,6 +197,22 @@ class TranscriptMonitor:
         except Exception:
             log.exception("transcript analysis failed")
             return None
+
+    def _score(self, f: feat.AnswerFeatures, ai_p: float | None) -> float:
+        """Learned detector (transcript/train.py) if available, else the documented prior."""
+        if self._learned is None:
+            p = models_dir() / "transcript" / "scripted_lr.pkl"
+            self._learned = pickle.loads(p.read_bytes()) if p.exists() else False
+        if not self._learned:
+            return feat.scripted_prior_score(f, ai_p)
+        vals = {**f.as_dict(), "ai_text_prob": ai_p}
+        x = [
+            [
+                vals.get(k) if vals.get(k) is not None else self._learned["medians"][k]
+                for k in self._learned["features"]
+            ]
+        ]
+        return float(self._learned["model"].predict_proba(x)[0, 1])
 
     def close(self) -> None:
         self._pool.shutdown(wait=False, cancel_futures=True)

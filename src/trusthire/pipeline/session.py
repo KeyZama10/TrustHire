@@ -363,8 +363,11 @@ class SessionStore:
         return s
 
     def get(self, sid: str) -> Session:
-        if sid in self.live:
-            return self.live[sid]
+        cached = self.live.get(sid)
+        # only sessions being analysed live are authoritative in memory; anything else (e.g. results written
+        # by an offline job in another thread/process) must be re-read from disk
+        if cached is not None and (cached.analyzer is not None or cached.subscribers):
+            return cached
         if not (self.root / sid / "session.json").exists():
             raise KeyError(sid)
         s = Session.load(self.root, sid)

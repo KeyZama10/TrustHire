@@ -73,9 +73,16 @@ def run(
                         csv, index=False
                     )
                     lj = OUT / "latency.json"
-                    d = json.loads(lj.read_text()) if lj.exists() else {}
-                    d[be_name] = lat
-                    lj.write_text(json.dumps(d, indent=2))
+                    if (
+                        cond == "clean"
+                    ):  # degradations (codecs, reverb) add their own cost; time clean audio only
+                        d = json.loads(lj.read_text()) if lj.exists() else {}
+                        d[be_name] = lat
+                        lj.write_text(json.dumps(d, indent=2))
+                    else:
+                        lat = (
+                            float(json.loads(lj.read_text()).get(be_name, np.nan)) if lj.exists() else np.nan
+                        )
                 r = report(y, s, bootstrap=500, seed=seed).as_dict()
                 r.update(
                     {
@@ -114,14 +121,37 @@ def write_markdown(results: dict, path: Path) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def measure_latency(backends: list[str], n: int = 40) -> dict[str, float]:
+    """Dedicated CPU latency measurement (run on an otherwise idle machine)."""
+    rng = np.random.default_rng(0)
+    x = (rng.standard_normal((n, 64600)) * 0.05).astype(np.float32)
+    out: dict[str, float] = {}
+    for b in backends:
+        be = build_backend(b)
+        be.p_spoof(x[:1])
+        times = []
+        for i in range(n):
+            t0 = time.perf_counter()
+            be.p_spoof(x[i : i + 1])
+            times.append(time.perf_counter() - t0)
+        out[b] = 1e3 * float(np.median(times))
+        print(f"{b}: {out[b]:.0f} ms/utterance (median of {n})")
+    (OUT / "latency.json").write_text(json.dumps(out, indent=2))
+    return out
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--measure-latency", action="store_true")
     ap.add_argument("--datasets", nargs="+", default=["itw", "asv19la"])
     ap.add_argument("--backends", nargs="+", default=["aasist", "aasist_l", "spectra0"])
     ap.add_argument("--conditions", nargs="+", default=["clean"])
     ap.add_argument("--n", type=int, default=400)
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args(argv)
+    if a.measure_latency:
+        measure_latency(a.backends)
+        return
     run(a.datasets, a.backends, a.conditions, a.n, a.seed)
 
 

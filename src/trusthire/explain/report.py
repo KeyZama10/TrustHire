@@ -191,7 +191,9 @@ def build_pdf(
                 Paragraph(
                     f"<b>{a['t_start']:.0f}–{a['t_end']:.0f}s</b> scripted-risk {a.get('scripted_score', 0):.2f} · "
                     f"fillers/100w {f.get('filler_per_100w', 0):.1f} · gap CV {f.get('gap_cv', 0):.2f} · "
-                    f"AI-text {a.get('ai_text_prob') if a.get('ai_text_prob') is not None else 'n/a'}",
+                    f"AI-text {a['ai_text_prob']:.2f}"
+                    if a.get("ai_text_prob") is not None
+                    else "AI-text n/a",
                     small,
                 )
             )

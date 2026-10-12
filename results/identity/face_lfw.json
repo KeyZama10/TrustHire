@@ -1,0 +1,34 @@
+{
+  "benchmark": "LFW test pairs",
+  "n_pairs": 1000,
+  "pairs_without_face": 0,
+  "n": 1000,
+  "n_pos": 500,
+  "auc": 0.98604,
+  "eer": 0.03,
+  "eer_threshold": 0.8785851164297623,
+  "f1_at_eer": 0.968968968968969,
+  "f1_at_05": NaN,
+  "tpr_at_fpr1": 0.42,
+  "prec_at_fpr1": 0.9767441860465116,
+  "tpr_at_fpr5": 1.0,
+  "prec_at_fpr5": 0.9671179883945842,
+  "ece": null,
+  "auc_ci": [
+    0.976214,
+    0.9935797000000001
+  ],
+  "eer_ci": [
+    0.014,
+    0.042
+  ],
+  "accuracy_at_eer_thr": 0.969,
+  "eer_threshold_sim": 0.12141488357023766,
+  "at_configured_threshold": {
+    "threshold_sim": 0.3,
+    "false_flag_rate_same_person": 0.036,
+    "missed_impostor_rate": 0.0
+  },
+  "mean_sim_same": 0.6611851246543229,
+  "mean_sim_diff": 0.0024232121198438108
+}

@@ -1,0 +1,19 @@
+# python -m trusthire.audio.train [key=value ...]
+model: ssl                # ssl | aasist | aasist_l | rawnet2
+encoder: microsoft/wavlm-base-plus   # ssl encoder: facebook/wav2vec2-xls-r-300m, microsoft/wavlm-large, ...
+init_pretrained: true     # aasist/aasist_l: start from the ASVspoof19 checkpoint
+epochs: 8
+batch_size: 16
+lr: 1.0e-5                # SSL fine-tuning; aasist/rawnet2 use 1e-4 automatically
+weight_decay: 1.0e-4
+augment: true             # codec / noise / telephone / reverb / gain (common/augment.py)
+max_len: 64600
+workers: 4
+seed: 1234
+tracking: mlflow
+data:
+  asvspoof_root: ???      # ASVspoof2019 LA root (contains ASVspoof2019_LA_train/, ASVspoof2019_LA_cm_protocols/)
+  extra_csv: null         # optional csv(path,label) of extra bona fide/spoof audio (e.g. own TTS/RVC clones)
+hydra:
+  run:
+    dir: logs/hydra/audio/${now:%Y-%m-%d_%H-%M-%S}

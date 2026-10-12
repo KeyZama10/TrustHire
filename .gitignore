@@ -22,3 +22,6 @@ frontend/dist/
 # env
 .env
 *.log
+.claude/
+results/SYNTHETIC_DEMO/
+logs/

@@ -36,9 +36,22 @@ def ensure_onnx(backbone: str) -> Path:
     p = onnx_path(backbone)
     if not p.exists():
         from trusthire.common.export import export_onnx
+        from trusthire.common.registry import BY_KEY
 
-        w = ensure(f"video.{backbone}")
-        model = build_frame_model(backbone, w)
+        # registry checkpoints (DeepfakeBench) or a locally trained one from `trusthire.video.train`
+        trained = models_dir() / "video" / f"{backbone.split('.')[0]}_trained.pth"
+        w = (
+            trained
+            if trained.exists()
+            else ensure(f"video.{backbone}")
+            if f"video.{backbone}" in BY_KEY
+            else None
+        )
+        if w is None:
+            raise FileNotFoundError(
+                f"no weights for video backbone {backbone!r}; train it with trusthire.video.train"
+            )
+        model = build_frame_model(backbone, w, pretrained_timm=False)
         size = INPUT_SIZE.get(backbone, 224)
         export_onnx(model, (torch.randn(2, 3, size, size),), p, ["image"], ["logits", "embedding"])
     return p

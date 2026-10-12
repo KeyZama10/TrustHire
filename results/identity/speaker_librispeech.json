@@ -1,0 +1,31 @@
+{
+  "benchmark": "LibriSpeech test-clean trials (4 s segments)",
+  "n_trials": 2000,
+  "n_speakers": 40,
+  "n": 2000,
+  "n_pos": 1000,
+  "auc": 0.998309,
+  "eer": 0.018,
+  "eer_threshold": 0.7163598934809366,
+  "f1_at_eer": 0.9825087456271864,
+  "f1_at_05": NaN,
+  "tpr_at_fpr1": 0.962,
+  "prec_at_fpr1": 0.9897119341563786,
+  "tpr_at_fpr5": 0.997,
+  "prec_at_fpr5": 0.9531548757170172,
+  "ece": null,
+  "auc_ci": [
+    0.9972593000000001,
+    0.999132
+  ],
+  "eer_ci": [
+    0.010000000000000004,
+    0.02450000000000001
+  ],
+  "eer_threshold_sim": 0.28364010651906335,
+  "at_configured_threshold": {
+    "threshold_sim": 0.25,
+    "false_flag_rate_same_person": 0.011,
+    "missed_impostor_rate": 0.034
+  }
+}

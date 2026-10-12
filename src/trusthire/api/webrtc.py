@@ -35,6 +35,9 @@ class LiveIngest:
         self.next_vt = 0.0
         self.audio_samples = 0
         self.audio_started_at: float | None = None
+        self.video_anchor: tuple[float, float] | None = (
+            None  # (receive-clock time, media time) of first frame
+        )
         self.resampler = av.AudioResampler(format="flt", layout="mono", rate=16000)
         self._lock = asyncio.Lock()
 
@@ -48,7 +51,15 @@ class LiveIngest:
         try:
             while True:
                 frame: Any = await track.recv()  # av.VideoFrame
-                t = self._now()
+                # Sender media clock (RTP timestamps) for frame spacing, anchored once to the first arrival.
+                # Arrival-time stamping jitters under load (bursty delivery) and scrambles lip motion for
+                # SyncNet (measured: live offset drifted +1 -> -3 frames, confidence 1.7 vs 6-10 offline).
+                if frame.pts is not None and frame.time_base is not None:
+                    if self.video_anchor is None:
+                        self.video_anchor = (self._now(), float(frame.pts * frame.time_base))
+                    t = self.video_anchor[0] + float(frame.pts * frame.time_base) - self.video_anchor[1]
+                else:
+                    t = self._now()
                 if t + 1e-3 < self.next_vt:
                     continue
                 img = frame.to_ndarray(format="bgr24")
