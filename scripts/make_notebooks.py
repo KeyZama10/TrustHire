@@ -9,7 +9,7 @@ import nbformat as nbf
 
 ROOT = Path(__file__).resolve().parents[1]
 NB = ROOT / "notebooks"
-REPO = "https://github.com/<you>/trusthire.git"  # push the repo, then set this
+REPO = "https://github.com/Navyab27/TrustHire.git"  
 
 SETUP = f"""# --- environment (Kaggle: enable GPU T4x2 / P100; Colab: Runtime > GPU) ---
 !pip -q install uv
