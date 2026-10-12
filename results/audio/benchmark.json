@@ -1,128 +1,4 @@
 {
-  "itw/clean/aasist": {
-    "n": 400,
-    "n_pos": 200,
-    "auc": 0.57945,
-    "eer": 0.42500000000000004,
-    "eer_threshold": 0.8318801522254944,
-    "f1_at_eer": 0.575,
-    "f1_at_05": 0.6477024070021882,
-    "tpr_at_fpr1": 0.02,
-    "prec_at_fpr1": 0.6666666666666666,
-    "tpr_at_fpr5": 0.05,
-    "prec_at_fpr5": 0.5555555555555556,
-    "ece": 0.29604714405828414,
-    "auc_ci": [
-      0.52881375,
-      0.633235
-    ],
-    "eer_ci": [
-      0.38,
-      0.4788124999999999
-    ],
-    "dataset": "itw",
-    "condition": "clean",
-    "backend": "aasist",
-    "latency_ms_per_utt": 205.90878749499097,
-    "shards": [
-      "test-00000-of-00008.parquet",
-      "test-00005-of-00008.parquet"
-    ],
-    "subset": "stratified 400 utts (seed 0)"
-  },
-  "itw/clean/aasist_l": {
-    "n": 400,
-    "n_pos": 200,
-    "auc": 0.6174875000000001,
-    "eer": 0.435,
-    "eer_threshold": 0.9808089733123779,
-    "f1_at_eer": 0.565,
-    "f1_at_05": 0.69921875,
-    "tpr_at_fpr1": 0.05,
-    "prec_at_fpr1": 0.8333333333333334,
-    "tpr_at_fpr5": 0.11,
-    "prec_at_fpr5": 0.6875,
-    "ece": 0.3245398417267552,
-    "auc_ci": [
-      0.567048125,
-      0.6693459374999999
-    ],
-    "eer_ci": [
-      0.38,
-      0.475
-    ],
-    "dataset": "itw",
-    "condition": "clean",
-    "backend": "aasist_l",
-    "latency_ms_per_utt": 169.64277501392644,
-    "shards": [
-      "test-00000-of-00008.parquet",
-      "test-00005-of-00008.parquet"
-    ],
-    "subset": "stratified 400 utts (seed 0)"
-  },
-  "itw/clean/spectra0": {
-    "n": 400,
-    "n_pos": 200,
-    "auc": 0.99775,
-    "eer": 0.012500000000000004,
-    "eer_threshold": 0.9675613641738892,
-    "f1_at_eer": 0.9875311720698254,
-    "f1_at_05": 0.9731051344743277,
-    "tpr_at_fpr1": 0.98,
-    "prec_at_fpr1": 0.9949238578680203,
-    "tpr_at_fpr5": 0.995,
-    "prec_at_fpr5": 0.9567307692307693,
-    "ece": 0.023272106563519603,
-    "auc_ci": [
-      0.99337375,
-      0.99995
-    ],
-    "eer_ci": [
-      0.005,
-      0.03
-    ],
-    "dataset": "itw",
-    "condition": "clean",
-    "backend": "spectra0",
-    "latency_ms_per_utt": 1031.1892374884337,
-    "shards": [
-      "test-00000-of-00008.parquet",
-      "test-00005-of-00008.parquet"
-    ],
-    "subset": "stratified 400 utts (seed 0)"
-  },
-  "itw/clean/spectra0_int8": {
-    "n": 400,
-    "n_pos": 200,
-    "auc": 0.997725,
-    "eer": 0.012500000000000004,
-    "eer_threshold": 0.9582334160804749,
-    "f1_at_eer": 0.9875311720698254,
-    "f1_at_05": 0.9731051344743277,
-    "tpr_at_fpr1": 0.98,
-    "prec_at_fpr1": 0.98989898989899,
-    "tpr_at_fpr5": 0.995,
-    "prec_at_fpr5": 0.961352657004831,
-    "ece": 0.022399920463745067,
-    "auc_ci": [
-      0.9934118749999999,
-      0.9999131250000001
-    ],
-    "eer_ci": [
-      0.0050000000000000044,
-      0.03
-    ],
-    "dataset": "itw",
-    "condition": "clean",
-    "backend": "spectra0_int8",
-    "latency_ms_per_utt": 627.953625007649,
-    "shards": [
-      "test-00000-of-00008.parquet",
-      "test-00005-of-00008.parquet"
-    ],
-    "subset": "stratified 400 utts (seed 0)"
-  },
   "asv19la/clean/aasist": {
     "n": 308,
     "n_pos": 154,
@@ -147,11 +23,7 @@
     "dataset": "asv19la",
     "condition": "clean",
     "backend": "aasist",
-    "latency_ms_per_utt": 205.44618749408983,
-    "shards": [
-      "test-00000-of-00009.parquet",
-      "test-00006-of-00009.parquet"
-    ],
+    "latency_ms_per_utt": 500.5458500236273,
     "subset": "stratified 308 utts (seed 0)"
   },
   "asv19la/clean/aasist_l": {
@@ -159,14 +31,14 @@
     "n_pos": 154,
     "auc": 0.9991988530949569,
     "eer": 0.022727272727272704,
-    "eer_threshold": 0.030786976218223572,
+    "eer_threshold": 0.0307869762182235,
     "f1_at_eer": 0.9773462783171522,
     "f1_at_05": 0.976897689768977,
     "tpr_at_fpr1": 0.9805194805194806,
     "prec_at_fpr1": 0.993421052631579,
     "tpr_at_fpr5": 1.0,
     "prec_at_fpr5": 0.9746835443037974,
-    "ece": 0.025609212430291427,
+    "ece": 0.025609212430291434,
     "auc_ci": [
       0.9975280401416765,
       1.0
@@ -178,11 +50,7 @@
     "dataset": "asv19la",
     "condition": "clean",
     "backend": "aasist_l",
-    "latency_ms_per_utt": 171.01809999439865,
-    "shards": [
-      "test-00000-of-00009.parquet",
-      "test-00006-of-00009.parquet"
-    ],
+    "latency_ms_per_utt": 395.2452000230551,
     "subset": "stratified 308 utts (seed 0)"
   },
   "asv19la/clean/spectra0": {
@@ -197,7 +65,7 @@
     "prec_at_fpr1": 1.0,
     "tpr_at_fpr5": 1.0,
     "prec_at_fpr5": 1.0,
-    "ece": 0.0015602994493791366,
+    "ece": 0.0015602994493791364,
     "auc_ci": [
       0.9999999999999999,
       1.0
@@ -209,11 +77,7 @@
     "dataset": "asv19la",
     "condition": "clean",
     "backend": "spectra0",
-    "latency_ms_per_utt": 1052.4853749957401,
-    "shards": [
-      "test-00000-of-00009.parquet",
-      "test-00006-of-00009.parquet"
-    ],
+    "latency_ms_per_utt": 3326.6636499902233,
     "subset": "stratified 308 utts (seed 0)"
   },
   "asv19la/clean/spectra0_int8": {
@@ -228,7 +92,7 @@
     "prec_at_fpr1": 1.0,
     "tpr_at_fpr5": 1.0,
     "prec_at_fpr5": 1.0,
-    "ece": 0.0016807918957839054,
+    "ece": 0.001680791895783905,
     "auc_ci": [
       0.9999999999999999,
       1.0
@@ -240,11 +104,520 @@
     "dataset": "asv19la",
     "condition": "clean",
     "backend": "spectra0_int8",
-    "latency_ms_per_utt": 590.2227500046138,
-    "shards": [
-      "test-00000-of-00009.parquet",
-      "test-00006-of-00009.parquet"
-    ],
+    "latency_ms_per_utt": 1803.3903499599546,
     "subset": "stratified 308 utts (seed 0)"
+  },
+  "itw/clean/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.57945,
+    "eer": 0.42500000000000004,
+    "eer_threshold": 0.8318801522254944,
+    "f1_at_eer": 0.575,
+    "f1_at_05": 0.6477024070021882,
+    "tpr_at_fpr1": 0.02,
+    "prec_at_fpr1": 0.6666666666666666,
+    "tpr_at_fpr5": 0.05,
+    "prec_at_fpr5": 0.5555555555555556,
+    "ece": 0.29604714405828414,
+    "auc_ci": [
+      0.52881375,
+      0.633235
+    ],
+    "eer_ci": [
+      0.38,
+      0.4788124999999999
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/clean/aasist_l": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.6174875000000001,
+    "eer": 0.435,
+    "eer_threshold": 0.980808973312378,
+    "f1_at_eer": 0.565,
+    "f1_at_05": 0.69921875,
+    "tpr_at_fpr1": 0.05,
+    "prec_at_fpr1": 0.8333333333333334,
+    "tpr_at_fpr5": 0.11,
+    "prec_at_fpr5": 0.6875,
+    "ece": 0.3245398417267552,
+    "auc_ci": [
+      0.567048125,
+      0.6693459374999999
+    ],
+    "eer_ci": [
+      0.38,
+      0.475
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "aasist_l",
+    "latency_ms_per_utt": 395.2452000230551,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/clean/spectra0": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.99775,
+    "eer": 0.012500000000000004,
+    "eer_threshold": 0.9675613641738892,
+    "f1_at_eer": 0.9875311720698254,
+    "f1_at_05": 0.9731051344743277,
+    "tpr_at_fpr1": 0.98,
+    "prec_at_fpr1": 0.9949238578680203,
+    "tpr_at_fpr5": 0.995,
+    "prec_at_fpr5": 0.9567307692307693,
+    "ece": 0.023272106563519614,
+    "auc_ci": [
+      0.99337375,
+      0.99995
+    ],
+    "eer_ci": [
+      0.005,
+      0.03
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "spectra0",
+    "latency_ms_per_utt": 3326.6636499902233,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/clean/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.997725,
+    "eer": 0.012500000000000004,
+    "eer_threshold": 0.9582334160804749,
+    "f1_at_eer": 0.9875311720698254,
+    "f1_at_05": 0.9731051344743277,
+    "tpr_at_fpr1": 0.98,
+    "prec_at_fpr1": 0.98989898989899,
+    "tpr_at_fpr5": 0.995,
+    "prec_at_fpr5": 0.961352657004831,
+    "ece": 0.02239992046374508,
+    "auc_ci": [
+      0.9934118749999999,
+      0.9999131250000001
+    ],
+    "eer_ci": [
+      0.0050000000000000044,
+      0.03
+    ],
+    "dataset": "itw",
+    "condition": "clean",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/mp3_32k/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.5679125,
+    "eer": 0.4175,
+    "eer_threshold": 0.7622464299201965,
+    "f1_at_eer": 0.5856079404466501,
+    "f1_at_05": 0.6225165562913907,
+    "tpr_at_fpr1": 0.02,
+    "prec_at_fpr1": 0.6666666666666666,
+    "tpr_at_fpr5": 0.045,
+    "prec_at_fpr5": 0.47368421052631576,
+    "ece": 0.3036816505460592,
+    "auc_ci": [
+      0.5162150000000001,
+      0.62224125
+    ],
+    "eer_ci": [
+      0.385,
+      0.485
+    ],
+    "dataset": "itw",
+    "condition": "mp3_32k",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/mp3_32k/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.998575,
+    "eer": 0.02250000000000001,
+    "eer_threshold": 0.961231291294098,
+    "f1_at_eer": 0.9775561097256857,
+    "f1_at_05": 0.9476190476190476,
+    "tpr_at_fpr1": 0.98,
+    "prec_at_fpr1": 0.98989898989899,
+    "tpr_at_fpr5": 0.985,
+    "prec_at_fpr5": 0.9752475247524752,
+    "ece": 0.04751015871205935,
+    "auc_ci": [
+      0.996410625,
+      0.999813125
+    ],
+    "eer_ci": [
+      0.0050000000000000044,
+      0.03750000000000002
+    ],
+    "dataset": "itw",
+    "condition": "mp3_32k",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/noise_snr10/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.383775,
+    "eer": 0.575,
+    "eer_threshold": 0.9172891974449158,
+    "f1_at_eer": 0.425,
+    "f1_at_05": 0.5802469135802469,
+    "tpr_at_fpr1": 0.005,
+    "prec_at_fpr1": 0.5,
+    "tpr_at_fpr5": 0.005,
+    "prec_at_fpr5": 0.5,
+    "ece": 0.41453062967630105,
+    "auc_ci": [
+      0.3321675,
+      0.44497749999999997
+    ],
+    "eer_ci": [
+      0.52,
+      0.625
+    ],
+    "dataset": "itw",
+    "condition": "noise_snr10",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/noise_snr10/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.985375,
+    "eer": 0.07499999999999998,
+    "eer_threshold": 0.8811609148979187,
+    "f1_at_eer": 0.925,
+    "f1_at_05": 0.91415313225058,
+    "tpr_at_fpr1": 0.82,
+    "prec_at_fpr1": 0.9879518072289156,
+    "tpr_at_fpr5": 0.915,
+    "prec_at_fpr5": 0.9481865284974094,
+    "ece": 0.07975750601439355,
+    "auc_ci": [
+      0.975586875,
+      0.9921325
+    ],
+    "eer_ci": [
+      0.045000000000000005,
+      0.095
+    ],
+    "dataset": "itw",
+    "condition": "noise_snr10",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/noise_snr20_pink/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.506975,
+    "eer": 0.485,
+    "eer_threshold": 0.6953150033950806,
+    "f1_at_eer": 0.515,
+    "f1_at_05": 0.5866050808314087,
+    "tpr_at_fpr1": 0.01,
+    "prec_at_fpr1": 0.5,
+    "tpr_at_fpr5": 0.015,
+    "prec_at_fpr5": 0.42857142857142855,
+    "ece": 0.3455264466434892,
+    "auc_ci": [
+      0.451,
+      0.566883125
+    ],
+    "eer_ci": [
+      0.434875,
+      0.535
+    ],
+    "dataset": "itw",
+    "condition": "noise_snr20_pink",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/noise_snr20_pink/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.9956499999999999,
+    "eer": 0.012500000000000004,
+    "eer_threshold": 0.9163498878479004,
+    "f1_at_eer": 0.9875311720698254,
+    "f1_at_05": 0.9544364508393285,
+    "tpr_at_fpr1": 0.98,
+    "prec_at_fpr1": 0.98989898989899,
+    "tpr_at_fpr5": 0.995,
+    "prec_at_fpr5": 0.961352657004831,
+    "ece": 0.03971108721073988,
+    "auc_ci": [
+      0.987185625,
+      0.999925
+    ],
+    "eer_ci": [
+      0.005,
+      0.03
+    ],
+    "dataset": "itw",
+    "condition": "noise_snr20_pink",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/opus_16k/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.5364375,
+    "eer": 0.47,
+    "eer_threshold": 0.8870364427566528,
+    "f1_at_eer": 0.53,
+    "f1_at_05": 0.6212765957446809,
+    "tpr_at_fpr1": 0.01,
+    "prec_at_fpr1": 0.5,
+    "tpr_at_fpr5": 0.04,
+    "prec_at_fpr5": 0.4444444444444444,
+    "ece": 0.32822768865587937,
+    "auc_ci": [
+      0.48356562500000005,
+      0.5915625
+    ],
+    "eer_ci": [
+      0.417375,
+      0.515
+    ],
+    "dataset": "itw",
+    "condition": "opus_16k",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/opus_16k/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.99745,
+    "eer": 0.030000000000000013,
+    "eer_threshold": 0.9218369126319884,
+    "f1_at_eer": 0.9701492537313433,
+    "f1_at_05": 0.9451073985680191,
+    "tpr_at_fpr1": 0.975,
+    "prec_at_fpr1": 1.0,
+    "tpr_at_fpr5": 0.985,
+    "prec_at_fpr5": 0.9609756097560975,
+    "ece": 0.04657378562110537,
+    "auc_ci": [
+      0.9938,
+      0.99975
+    ],
+    "eer_ci": [
+      0.006187500000000007,
+      0.04250000000000002
+    ],
+    "dataset": "itw",
+    "condition": "opus_16k",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/reverb_0.25/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.8855749999999999,
+    "eer": 0.20999999999999996,
+    "eer_threshold": 0.2779598832130432,
+    "f1_at_eer": 0.79,
+    "f1_at_05": 0.7896103896103897,
+    "tpr_at_fpr1": 0.335,
+    "prec_at_fpr1": 0.9852941176470589,
+    "tpr_at_fpr5": 0.595,
+    "prec_at_fpr5": 0.9224806201550387,
+    "ece": 0.13614844482419813,
+    "auc_ci": [
+      0.85404625,
+      0.9137275
+    ],
+    "eer_ci": [
+      0.17,
+      0.25
+    ],
+    "dataset": "itw",
+    "condition": "reverb_0.25",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/reverb_0.4/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.508125,
+    "eer": 0.53,
+    "eer_threshold": 0.9992311000823976,
+    "f1_at_eer": 0.47,
+    "f1_at_05": 0.6840277777777778,
+    "tpr_at_fpr1": 0.0,
+    "prec_at_fpr1": 0.0,
+    "tpr_at_fpr5": 0.015,
+    "prec_at_fpr5": 0.2727272727272727,
+    "ece": 0.4328570085857064,
+    "auc_ci": [
+      0.447623125,
+      0.564344375
+    ],
+    "eer_ci": [
+      0.4711875,
+      0.58
+    ],
+    "dataset": "itw",
+    "condition": "reverb_0.4",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/reverb_0.4/spectra0_int8+wpe": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.80585,
+    "eer": 0.265,
+    "eer_threshold": 0.477040022611618,
+    "f1_at_eer": 0.735,
+    "f1_at_05": 0.7304785894206549,
+    "tpr_at_fpr1": 0.24,
+    "prec_at_fpr1": 0.96,
+    "tpr_at_fpr5": 0.37,
+    "prec_at_fpr5": 0.8809523809523809,
+    "ece": 0.17272350249368856,
+    "auc_ci": [
+      0.7658125,
+      0.848100625
+    ],
+    "eer_ci": [
+      0.21999999999999997,
+      0.30881249999999993
+    ],
+    "dataset": "itw",
+    "condition": "reverb_0.4",
+    "backend": "spectra0_int8+wpe",
+    "latency_ms_per_utt": 2259.0294999536127,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/reverb_0.4/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.799075,
+    "eer": 0.275,
+    "eer_threshold": 0.4801878631114959,
+    "f1_at_eer": 0.725,
+    "f1_at_05": 0.72544080604534,
+    "tpr_at_fpr1": 0.175,
+    "prec_at_fpr1": 0.9459459459459459,
+    "tpr_at_fpr5": 0.37,
+    "prec_at_fpr5": 0.8809523809523809,
+    "ece": 0.1732787076499744,
+    "auc_ci": [
+      0.75859375,
+      0.842700625
+    ],
+    "eer_ci": [
+      0.22999999999999998,
+      0.31499999999999995
+    ],
+    "dataset": "itw",
+    "condition": "reverb_0.4",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/reverb_0.7/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.7283249999999999,
+    "eer": 0.34249999999999997,
+    "eer_threshold": 0.6689791679382324,
+    "f1_at_eer": 0.6583541147132169,
+    "f1_at_05": 0.6682242990654206,
+    "tpr_at_fpr1": 0.14,
+    "prec_at_fpr1": 0.9333333333333333,
+    "tpr_at_fpr5": 0.295,
+    "prec_at_fpr5": 0.855072463768116,
+    "ece": 0.22491582242393637,
+    "auc_ci": [
+      0.683515,
+      0.777133125
+    ],
+    "eer_ci": [
+      0.30500000000000005,
+      0.39631249999999996
+    ],
+    "dataset": "itw",
+    "condition": "reverb_0.7",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/telephone/aasist": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.48476249999999993,
+    "eer": 0.53,
+    "eer_threshold": 0.9681933522224426,
+    "f1_at_eer": 0.47,
+    "f1_at_05": 0.6150870406189555,
+    "tpr_at_fpr1": 0.015,
+    "prec_at_fpr1": 0.6,
+    "tpr_at_fpr5": 0.075,
+    "prec_at_fpr5": 0.6,
+    "ece": 0.4253059000338544,
+    "auc_ci": [
+      0.4295903125,
+      0.5427787500000001
+    ],
+    "eer_ci": [
+      0.48,
+      0.5838125
+    ],
+    "dataset": "itw",
+    "condition": "telephone",
+    "backend": "aasist",
+    "latency_ms_per_utt": 500.5458500236273,
+    "subset": "stratified 400 utts (seed 0)"
+  },
+  "itw/telephone/spectra0_int8": {
+    "n": 400,
+    "n_pos": 200,
+    "auc": 0.996275,
+    "eer": 0.020000000000000018,
+    "eer_threshold": 0.8825710586139134,
+    "f1_at_eer": 0.9775561097256857,
+    "f1_at_05": 0.9588377723970944,
+    "tpr_at_fpr1": 0.965,
+    "prec_at_fpr1": 1.0,
+    "tpr_at_fpr5": 0.985,
+    "prec_at_fpr5": 0.9516908212560387,
+    "ece": 0.03728829875936103,
+    "auc_ci": [
+      0.990586875,
+      0.999688125
+    ],
+    "eer_ci": [
+      0.007500000000000002,
+      0.04250000000000002
+    ],
+    "dataset": "itw",
+    "condition": "telephone",
+    "backend": "spectra0_int8",
+    "latency_ms_per_utt": 1803.3903499599546,
+    "subset": "stratified 400 utts (seed 0)"
   }
 }

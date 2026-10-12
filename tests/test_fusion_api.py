@@ -144,3 +144,29 @@ def test_api_smoke(tmp_path, monkeypatch):
         assert r.status_code == 200 and r.json()["chunks"] >= 1
         assert c.post(f"/api/sessions/{s['id']}/question", json={}).status_code == 409
         assert c.delete(f"/api/sessions/{s['id']}").json()["deleted"]
+
+
+def test_relative_sync_baseline():
+    """Constant A/V skew (e.g. Bluetooth headset) is tolerated; a sudden change or an extreme skew is not."""
+    from trusthire.avsync.infer import sync_risk
+    from trusthire.pipeline.analyzer import SessionAnalyzer
+
+    a = SessionAnalyzer.__new__(SessionAnalyzer)  # only the sync state is needed
+    a._sync_offsets = []
+
+    def mk(off: int, conf: float = 7.0) -> ModuleOutput:
+        return ModuleOutput(
+            module=Modality.AVSYNC,
+            score=sync_risk(off, conf),
+            confidence=1.0,
+            t_start=0,
+            t_end=3,
+            details={"offset_frames": off, "sync_conf": conf},
+        )
+
+    assert mk(6).score > 0.7  # absolute rule alone would flag a constant 240 ms skew
+    for _ in range(3):
+        a._relative_sync(mk(6))
+    assert a._relative_sync(mk(6)).score < 0.1
+    assert a._relative_sync(mk(1)).score >= 0.45  # 5-frame jump vs baseline
+    assert a._relative_sync(mk(13)).score > 0.95  # > 320 ms is suspicious regardless of baseline

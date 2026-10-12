@@ -86,6 +86,8 @@ def reverb(
 AUDIO_CONDITIONS = {
     "clean": lambda x, r: x,
     "noise_snr10": lambda x, r: add_noise(x, 10, r),
+    "reverb_0.25": lambda x, r: reverb(x, 0.25, rng=r),
+    "reverb_0.7": lambda x, r: reverb(x, 0.7, rng=r),
     "noise_snr20_pink": lambda x, r: add_noise(x, 20, r, "pink"),
     "opus_16k": lambda x, r: codec(x, "opus", 16000),
     "mp3_32k": lambda x, r: codec(x, "mp3", 32000),

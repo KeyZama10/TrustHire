@@ -54,7 +54,7 @@ def run(
             y = np.array([u.label for u in utts])
             for be_name in backends:
                 key = f"{ds}/{cond}/{be_name}"
-                csv = OUT / f"scores_{ds}_{cond}_{be_name}.csv"
+                csv = OUT / f"scores_{ds}_{cond}_{be_name.replace('+', '-')}.csv"
                 if csv.exists():  # cached scores from a previous run
                     s = pd.read_csv(csv)["score"].to_numpy()
                     lj = OUT / "latency.json"
@@ -121,6 +121,43 @@ def write_markdown(results: dict, path: Path) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def rebuild_from_cache(seed: int = 0) -> dict[str, Any]:
+    """Recompute benchmark.{json,md} from every cached per-utterance score CSV (no model inference)."""
+    from trusthire.audio.datasets import BENCH_REPOS
+
+    lj = OUT / "latency.json"
+    lat = json.loads(lj.read_text()) if lj.exists() else {}
+    lat.pop("_conditions", None)
+    results: dict[str, dict[str, Any]] = {}
+    conds = sorted(AUDIO_CONDITIONS, key=len, reverse=True)  # match longest condition names first
+    for csv in sorted(OUT.glob("scores_*.csv")):
+        rest = csv.stem.removeprefix("scores_")
+        ds = next((d for d in BENCH_REPOS if rest.startswith(d + "_")), None)
+        if ds is None:
+            continue
+        rest = rest[len(ds) + 1 :]
+        cond = next((c for c in conds if rest.startswith(c + "_")), None)
+        if cond is None:
+            continue
+        backend = rest[len(cond) + 1 :].replace("-", "+")
+        df = pd.read_csv(csv)
+        r = report(df["label"].to_numpy(), df["score"].to_numpy(), bootstrap=500, seed=seed).as_dict()
+        r.update(
+            {
+                "dataset": ds,
+                "condition": cond,
+                "backend": backend,
+                "latency_ms_per_utt": lat.get(backend, np.nan),
+                "subset": f"stratified {len(df)} utts (seed {seed})",
+            }
+        )
+        results[f"{ds}/{cond}/{backend}"] = r
+    (OUT / "benchmark.json").write_text(json.dumps(results, indent=2))
+    write_markdown(results, OUT / "benchmark.md")
+    print(f"rebuilt {len(results)} rows -> {OUT / 'benchmark.md'}")
+    return results
+
+
 def measure_latency(backends: list[str], n: int = 40) -> dict[str, float]:
     """Dedicated CPU latency measurement (run on an otherwise idle machine)."""
     rng = np.random.default_rng(0)
@@ -136,13 +173,25 @@ def measure_latency(backends: list[str], n: int = 40) -> dict[str, float]:
             times.append(time.perf_counter() - t0)
         out[b] = 1e3 * float(np.median(times))
         print(f"{b}: {out[b]:.0f} ms/utterance (median of {n})")
-    (OUT / "latency.json").write_text(json.dumps(out, indent=2))
+    import psutil
+
+    bat = psutil.sensors_battery()
+    freq = psutil.cpu_freq()
+    meta = {
+        "on_battery": bool(bat and not bat.power_plugged),
+        "cpu_mhz": freq.current if freq else None,
+        "measured": time.strftime("%Y-%m-%d %H:%M"),
+    }
+    (OUT / "latency.json").write_text(json.dumps({**out, "_conditions": meta}, indent=2))
+    if meta["on_battery"]:
+        print("WARNING: measured on battery power — CPU is throttled; re-measure plugged in")
     return out
 
 
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--measure-latency", action="store_true")
+    ap.add_argument("--rebuild", action="store_true", help="recompute tables from cached score CSVs")
     ap.add_argument("--datasets", nargs="+", default=["itw", "asv19la"])
     ap.add_argument("--backends", nargs="+", default=["aasist", "aasist_l", "spectra0"])
     ap.add_argument("--conditions", nargs="+", default=["clean"])
@@ -151,6 +200,9 @@ def main(argv: list[str] | None = None) -> None:
     a = ap.parse_args(argv)
     if a.measure_latency:
         measure_latency(a.backends)
+        return
+    if a.rebuild:
+        rebuild_from_cache(a.seed)
         return
     run(a.datasets, a.backends, a.conditions, a.n, a.seed)
 

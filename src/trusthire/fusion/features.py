@@ -17,6 +17,7 @@ from trusthire.common.types import ALL_MODALITIES, Modality, ModuleOutput
 MODS: tuple[str, ...] = tuple(m.value for m in ALL_MODALITIES)
 
 RAW_FEATURES: dict[str, tuple[str, str]] = {
+    "speech_snr_db": (Modality.AUDIO.value, "snr_db"),
     "sync_conf": (Modality.AVSYNC.value, "sync_conf"),
     "sync_abs_offset": (Modality.AVSYNC.value, "offset_frames"),
     "face_sim_enrolled": (Modality.FACE_ID.value, "sim_enrolled"),

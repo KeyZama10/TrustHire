@@ -97,6 +97,7 @@ class SessionAnalyzer:
         self._lock = threading.Lock()
         self.latencies: list[float] = []
         self._last_out: dict[str, ModuleOutput] = {}
+        self._sync_offsets: list[int] = []
         self.transcript = None
         if self.cfg.transcript and self.s.enable_transcript and self._on(Modality.SCRIPTED):
             from trusthire.transcript.infer import TranscriptMonitor
@@ -111,6 +112,28 @@ class SessionAnalyzer:
 
     def _on(self, m: Modality) -> bool:
         return m.value in self.cfg.enabled
+
+    def _relative_sync(self, o: ModuleOutput) -> ModuleOutput:
+        """Re-score lip-sync against this session's own baseline offset.
+
+        Genuine setups often have a constant A/V skew (capture pipelines, Bluetooth headsets add 150-250 ms);
+        what indicates manipulation is a *changing* offset or low sync confidence. The baseline is the median
+        offset of the session's confident windows (needs >= 3; until then the absolute offset is used).
+        """
+        from trusthire.avsync.infer import sync_risk
+
+        off, conf = o.details.get("offset_frames"), o.details.get("sync_conf")
+        if off is None or conf is None:
+            return o
+        if conf >= 4.0:
+            self._sync_offsets.append(int(off))
+        if len(self._sync_offsets) < 3:
+            return o
+        base = int(np.median(self._sync_offsets[-40:]))
+        # absolute guard: > 320 ms skew stays suspicious even if it has been there since the start
+        abs_term = float(np.clip((abs(int(off)) - 8) / 4.0, 0.0, 1.0)) * min(1.0, float(conf) / 3.0)
+        score = max(sync_risk(int(off) - base, float(conf)), abs_term)
+        return o.model_copy(update={"score": score, "details": {**o.details, "baseline_offset": base}})
 
     def _due(self, m: Modality, w: Window) -> bool:
         if not self._on(m):
@@ -181,6 +204,8 @@ class SessionAnalyzer:
                         outs[o.module.value] = o
             elif res is not None:
                 outs[res.module.value] = res
+        if Modality.AVSYNC.value in outs:
+            outs[Modality.AVSYNC.value] = self._relative_sync(outs[Modality.AVSYNC.value])
         # modules not scheduled this window: carry the previous (adjacent, contiguous) window's evidence
         for m in Modality:
             if (

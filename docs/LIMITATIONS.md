@@ -16,9 +16,16 @@ Grounded in what we measured (see `results/`) and in what we could not measure.
 
 ## Measured weaknesses
 
-* **Voice anti-spoofing under noise:** Spectra-0 int8 rises from 1.25 % EER (clean, In-the-Wild) to 7.5 % at
-  10 dB white noise; codec and reverb effects are in `results/audio/benchmark.md`. AASIST (the brief's
-  baseline) fails out of domain (42.5 % EER) — do not deploy it alone.
+* **Voice anti-spoofing — room reverberation is the biggest measured weakness.** On the same 400 In-the-Wild
+  utterances, Spectra-0 int8 EER is 1.25 % clean, 2.0 % telephone band, 2.25 % MP3-32k, 3.0 % Opus-16k,
+  7.5 % at 10 dB white noise, but **27.5 % with RT60 = 0.4 s reverb**, where 26.5 % of *genuine* voices exceed
+  P(spoof)=0.5 (5 % clean). A WPE dereverberation front-end did **not** help (26.5 % EER, measured). Mitigations
+  shipped: the module's confidence drops with estimated SNR (noise), and fusion treats voice-spoof as one
+  signal among many; the real fix is fine-tuning with room-impulse-response augmentation (`audio.train`
+  includes it) — needs a GPU and ASVspoof train data. Until then a reverberant room can raise false
+  synthetic-voice alerts. AASIST (the brief's baseline) fails out of domain everywhere (42–57 % EER).
+* **Enrollment-based channel calibration was rejected** on purpose: the candidate controls enrollment, so a
+  voice cloned already at enrollment would calibrate itself away.
 * **False positives on genuine but heavily compressed media:** on the SyncNet example clip (old broadcast
   footage) one window scored 0.71 synthetic-voice, and rPPG reported a "weak pulse" in 4/9 windows. Fusion kept
   the session at 96/100 trust, but per-module alerts fire.

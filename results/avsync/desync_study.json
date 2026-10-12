@@ -1,0 +1,75 @@
+{
+  "videos": [
+    "C:\\Users\\navya\\.trusthire\\models\\avsync\\example.avi"
+  ],
+  "n_windows": 63,
+  "per_shift": {
+    "-10": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 5.994692053113665,
+      "mean_risk": 1.0
+    },
+    "-6": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 9.221516813550677,
+      "mean_risk": 0.7500126883851046
+    },
+    "-4": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 9.011471612112862,
+      "mean_risk": 0.25006758365162796
+    },
+    "-2": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 8.74710294178554,
+      "mean_risk": 0.0002353918175493749
+    },
+    "0": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 8.807661942073278,
+      "mean_risk": 0.00023546476239170007
+    },
+    "2": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 8.779213564736503,
+      "mean_risk": 0.00021102657542505985
+    },
+    "4": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 8.742320810045515,
+      "mean_risk": 0.2500921423405217
+    },
+    "6": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 8.798248086656843,
+      "mean_risk": 0.750029487019809
+    },
+    "10": {
+      "offset_acc_1f": 1.0,
+      "mean_conf": 8.841708864484515,
+      "mean_risk": 1.0
+    }
+  },
+  "detect_desync_ge4": {
+    "n": 49,
+    "n_pos": 42,
+    "auc": 1.0,
+    "eer": 0.0,
+    "eer_threshold": 0.25000027558220217,
+    "f1_at_eer": 1.0,
+    "f1_at_05": 0.8,
+    "tpr_at_fpr1": 1.0,
+    "prec_at_fpr1": 1.0,
+    "tpr_at_fpr5": 1.0,
+    "prec_at_fpr5": 1.0,
+    "ece": 0.28571908048076117,
+    "auc_ci": [
+      0.9999999999999999,
+      1.0
+    ],
+    "eer_ci": [
+      0.0,
+      0.0
+    ]
+  }
+}

@@ -29,6 +29,16 @@ def speech_ratio(audio: np.ndarray, sr: int = SR) -> float:
     return float(sum(s["end"] - s["start"] for s in segs) / len(audio))
 
 
+def speech_snr_db(audio: np.ndarray, sr: int = SR) -> float:
+    """Blind SNR estimate by minimum statistics: 20 ms frame powers, speech = 90th pct, noise = 10th pct."""
+    hop = sr // 50
+    n = len(audio) // hop
+    if n < 10:
+        return float("nan")
+    pw = (audio[: n * hop].reshape(n, hop).astype(np.float64) ** 2).mean(1) + 1e-12
+    return float(10 * np.log10(np.percentile(pw, 90) / np.percentile(pw, 10)))
+
+
 def tile(x: np.ndarray, n: int = NB_SAMP) -> np.ndarray:
     if len(x) >= n:
         return x[-n:]
@@ -110,7 +120,32 @@ def spectra0_int8_path() -> Path:
     return dst
 
 
+def dereverb(x: np.ndarray) -> np.ndarray:
+    """WPE dereverberation (Nakatani et al. 2010; nara_wpe), single channel, ~0.3 s per 4 s on CPU."""
+    from nara_wpe.utils import istft, stft
+    from nara_wpe.wpe import wpe
+
+    y = stft(x[None].astype(np.float64), size=512, shift=128).transpose(2, 0, 1)
+    z = wpe(y, taps=10, delay=3, iterations=3, statistics_mode="full").transpose(1, 2, 0)
+    out = istft(z, size=512, shift=128)[0][: len(x)]
+    out = np.pad(out, (0, len(x) - len(out)))
+    return (out / (np.abs(out).max() + 1e-9) * (np.abs(x).max() + 1e-9)).astype(np.float32)
+
+
+class DereverbBackend(_Backend):
+    """Any backend with a WPE front-end (evaluated in results/audio: reverb robustness)."""
+
+    def __init__(self, inner: _Backend):
+        self.inner = inner
+        self.name = f"{inner.name}+wpe"
+
+    def p_spoof(self, wavs: np.ndarray) -> np.ndarray:
+        return self.inner.p_spoof(np.stack([dereverb(w) for w in wavs]))
+
+
 def build_backend(name: str) -> _Backend:
+    if name.endswith("+wpe"):
+        return DereverbBackend(build_backend(name.removesuffix("+wpe")))
     if name in ("aasist", "aasist_l"):
         return AASISTBackend(name)
     if name == "spectra0":
@@ -139,7 +174,11 @@ class VoiceSpoofDetector:
         if sr_ratio < 0.15:
             return missing(Modality.AUDIO, w.t_start, w.t_end, "no speech")
         p = float(self.backend.p_spoof(tile(audio)[None])[0])
-        conf = float(np.clip(sr_ratio / 0.6, 0.0, 1.0))
+        snr = speech_snr_db(audio)
+        # Measured: genuine speech is falsely flagged 5 % clean vs 17 % at 10 dB SNR (results/audio), so the
+        # module reports lower confidence in noisy windows and fusion down-weights it.
+        snr_conf = float(np.clip((snr - 8.0) / 17.0, 0.25, 1.0)) if np.isfinite(snr) else 0.5
+        conf = float(np.clip(sr_ratio / 0.6, 0.0, 1.0)) * snr_conf
         return ModuleOutput(
             module=Modality.AUDIO,
             score=p,
@@ -147,5 +186,9 @@ class VoiceSpoofDetector:
             t_start=w.t_start,
             t_end=w.t_end,
             latency_ms=(time.perf_counter() - t0) * 1e3,
-            details={"backend": self.backend.name, "speech_ratio": round(sr_ratio, 3)},
+            details={
+                "backend": self.backend.name,
+                "speech_ratio": round(sr_ratio, 3),
+                "snr_db": round(snr, 1) if np.isfinite(snr) else None,
+            },
         )
