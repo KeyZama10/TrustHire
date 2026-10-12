@@ -50,6 +50,13 @@ def audio_section() -> str:
         )
     rob = [r for r in bench.values() if r["condition"] != "clean"]
     txt = "\n".join(rows)
+    cond = lat.get("_conditions") or {}
+    if cond.get("on_battery"):
+        txt += (
+            f"\n\n*CPU ms/utt measured {cond.get('measured')} on battery power (CPU capped at "
+            f"{cond.get('cpu_mhz'):.0f} MHz) — about 3x slower than on mains power; re-measure plugged in with "
+            "`python -m trusthire.audio.eval --measure-latency`.*"
+        )
     if rob:
         conds = sorted({r["condition"] for r in bench.values() if r["dataset"] == "itw"})
         bks = sorted(

@@ -1,6 +1,6 @@
 # TrustHire: Multimodal Detection of Fraudulent Remote Job Interviews
 
-*Auto-generated from `results/` on 2026-10-12 13:55 UTC by `python -m trusthire.evaluation.report`. Do not edit
+*Auto-generated from `results/` on 2026-10-12 13:56 UTC by `python -m trusthire.evaluation.report`. Do not edit
 `paper.md` by hand — edit `paper_template.md`.*
 
 ## Abstract
@@ -56,6 +56,8 @@ alternating windows; because windows overlap by 50 %, alternate windows still ti
 | spectra0_int8 | itw | 400 | 0.9977 [0.993, 1.000] | 1.25 [0.5, 3.0] | 0.980 | 1803 |
 | aasist | itw | 400 | 0.5795 [0.529, 0.633] | 42.50 [38.0, 47.9] | 0.020 | 501 |
 | aasist_l | itw | 400 | 0.6175 [0.567, 0.669] | 43.50 [38.0, 47.5] | 0.050 | 395 |
+
+*CPU ms/utt measured 2026-10-12 19:25 on battery power (CPU capped at 1300 MHz) — about 3x slower than on mains power; re-measure plugged in with `python -m trusthire.audio.eval --measure-latency`.*
 
 **Robustness (In-the-Wild subset, same utterances under each degradation):**
 

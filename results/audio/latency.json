@@ -3,5 +3,11 @@
   "aasist_l": 395.2452000230551,
   "spectra0": 3326.6636499902233,
   "spectra0_int8": 1803.3903499599546,
-  "spectra0_int8+wpe": 2259.0294999536127
+  "spectra0_int8+wpe": 2259.0294999536127,
+  "_conditions": {
+    "on_battery": true,
+    "cpu_mhz": 1300.0,
+    "measured": "2026-10-12 19:25",
+    "note": "psutil reported power_plugged=False, cpu_freq 1300 MHz at measurement time"
+  }
 }
