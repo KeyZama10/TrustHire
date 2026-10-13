@@ -20,6 +20,10 @@ import time
 import zipfile
 from pathlib import Path
 
+# one BLAS/OpenMP thread per process: thread pools inherited across fork() can segfault DataLoader workers
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
+    os.environ.setdefault(_v, "1")
+
 WORK = Path("/kaggle/working")
 TMP = Path("/kaggle/tmp")
 TMP.mkdir(parents=True, exist_ok=True)
@@ -48,7 +52,7 @@ from torch import nn  # noqa: E402
 from torch.utils.data import DataLoader, Dataset  # noqa: E402
 
 from trusthire.audio.datasets import fetch_shards  # noqa: E402
-from trusthire.common.augment import AUDIO_CONDITIONS, add_noise, codec, reverb, telephone  # noqa: E402
+from trusthire.common.augment import AUDIO_CONDITIONS, add_noise, reverb, telephone  # noqa: E402
 from trusthire.evaluation.metrics import report  # noqa: E402
 
 DEV = "cuda"
@@ -83,6 +87,25 @@ def protocol(split: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+HAVE_FFMPEG = subprocess.run("ffmpeg -version", shell=True, capture_output=True).returncode == 0
+print("ffmpeg available:", HAVE_FFMPEG, flush=True)
+
+
+def codec_ffmpeg(x: np.ndarray, fmt: str, bitrate: int) -> np.ndarray:
+    """Lossy codec round trip in an ffmpeg subprocess. (PyAV inside forked DataLoader workers segfaulted.)"""
+    enc = {"opus": ["-c:a", "libopus", "-f", "ogg"], "mp3": ["-c:a", "libmp3lame", "-f", "mp3"],
+           "aac": ["-c:a", "aac", "-f", "adts"]}[fmt]
+    pcm = (np.clip(x, -1, 1) * 32767).astype(np.int16).tobytes()
+    a = subprocess.run(["ffmpeg", "-loglevel", "error", "-f", "s16le", "-ar", "16000", "-ac", "1", "-i", "pipe:0",
+                        *enc, "-b:a", str(bitrate), "pipe:1"], input=pcm, capture_output=True, timeout=30)
+    b = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", "pipe:0", "-f", "s16le", "-ar", "16000", "-ac", "1",
+                        "pipe:1"], input=a.stdout, capture_output=True, timeout=30)
+    y = np.frombuffer(b.stdout, np.int16).astype(np.float32) / 32767
+    if len(y) < len(x) // 2:
+        return x
+    return np.pad(y[: len(x)], (0, max(0, len(x) - len(y)))).astype(np.float32)
+
+
 def tile(x: np.ndarray) -> np.ndarray:
     return x[:NB] if len(x) >= NB else np.tile(x, int(np.ceil(NB / max(1, len(x)))))[:NB]
 
@@ -111,8 +134,8 @@ class Train(Dataset):
             x = reverb(x, float(rng.uniform(0.15, 0.9)), rng=rng)
         if rng.random() < 0.4:
             x = add_noise(x, float(rng.uniform(5, 30)), rng, "pink" if rng.random() < 0.5 else "white")
-        if rng.random() < 0.25:
-            x = codec(x, str(rng.choice(["opus", "mp3", "aac"])), int(rng.choice([12000, 16000, 24000, 32000])))
+        if HAVE_FFMPEG and rng.random() < 0.25:
+            x = codec_ffmpeg(x, str(rng.choice(["opus", "mp3", "aac"])), int(rng.choice([12000, 16000, 24000, 32000])))
         if rng.random() < 0.1:
             x = telephone(x)
         x = (x * rng.uniform(0.3, 1.2)).clip(-1, 1).astype(np.float32)
@@ -187,25 +210,33 @@ loss_fn = nn.CrossEntropyLoss(weight=torch.tensor([1.0, w_bona], device=DEV))
 log = []
 t0 = time.time()
 step = 0
-for ep in range(EPOCHS):
-    model.train()
-    for x, t in dl:
-        x, t = x.to(DEV, non_blocking=True), t.to(DEV, non_blocking=True)
-        with torch.autocast("cuda", dtype=torch.float16):
-            loss = loss_fn(model(x).float(), t)
-        opt.zero_grad(set_to_none=True)
-        scaler.scale(loss).backward()
-        scaler.unscale_(opt)
-        nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        scaler.step(opt)
-        scaler.update()
-        sched.step()
-        step += 1
-        if step % 50 == 0:
-            log.append({"step": step, "epoch": ep, "loss": float(loss), "min": (time.time() - t0) / 60})
-            print(f"step {step}/{total} loss {float(loss):.4f} {(time.time() - t0) / 60:.1f} min", flush=True)
-    pd.DataFrame(log).to_csv(WORK / "train_log.csv", index=False)
-    torch.save(model.state_dict(), TMP / f"ft_ep{ep}.pt")
+best_state = None
+try:
+    for ep in range(EPOCHS):
+        model.train()
+        for x, t in dl:
+            x, t = x.to(DEV, non_blocking=True), t.to(DEV, non_blocking=True)
+            with torch.autocast("cuda", dtype=torch.float16):
+                loss = loss_fn(model(x).float(), t)
+            opt.zero_grad(set_to_none=True)
+            scaler.scale(loss).backward()
+            scaler.unscale_(opt)
+            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            scaler.step(opt)
+            scaler.update()
+            sched.step()
+            step += 1
+            if step % 50 == 0:
+                log.append({"step": step, "epoch": ep, "loss": float(loss.detach()), "min": (time.time() - t0) / 60})
+                print(f"step {step}/{total} loss {float(loss.detach()):.4f} {(time.time() - t0) / 60:.1f} min", flush=True)
+        pd.DataFrame(log).to_csv(WORK / "train_log.csv", index=False)
+        torch.save(model.state_dict(), TMP / f"ft_ep{ep}.pt")
+except RuntimeError as e:  # e.g. a crashed DataLoader worker: keep the last completed checkpoint
+    print("TRAINING INTERRUPTED:", e, flush=True)
+    results["training_interrupted"] = str(e)[:300]
+    ckpts = sorted(TMP.glob("ft_ep*.pt"))
+    if ckpts:
+        model.load_state_dict(torch.load(ckpts[-1], map_location=DEV))
 
 results["finetuned"] = evaluate(model, "finetuned")
 results["config"] = {"epochs": EPOCHS, "batch": BATCH, "lr": LR, "train": "ASVspoof2019 LA train + reverb/noise/codec aug",
