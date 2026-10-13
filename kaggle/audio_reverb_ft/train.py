@@ -59,14 +59,19 @@ LR = float(os.environ.get("LR", "3e-6"))
 print("GPU:", torch.cuda.get_device_name(0), flush=True)
 
 # ----------------------------------------------------------------------------- data
-LA = TMP / "LA"
-if not (LA / "ASVspoof2019_LA_train").exists():
-    z = TMP / "LA.zip"
-    if not z.exists():
-        sh(f"wget -q -O {z} https://datashare.ed.ac.uk/bitstream/handle/10283/3336/LA.zip")
-    with zipfile.ZipFile(z) as f:
-        f.extractall(TMP)
-    z.unlink()
+# ASVspoof 2019 LA (ODC-By): attached Kaggle mirror awsaf49/asvpoof-2019-dataset, else download from DataShare
+_found = sorted(Path("/kaggle/input").rglob("ASVspoof2019_LA_cm_protocols"))
+if _found:
+    LA = _found[0].parent
+else:
+    LA = TMP / "LA"
+    if not (LA / "ASVspoof2019_LA_train").exists():
+        z = TMP / "LA.zip"
+        sh(f"curl -fL --retry 5 -A 'Mozilla/5.0' -o {z} https://datashare.ed.ac.uk/bitstream/handle/10283/3336/LA.zip")
+        with zipfile.ZipFile(z) as f:
+            f.extractall(TMP)
+        z.unlink()
+print("ASVspoof LA root:", LA, flush=True)
 
 
 def protocol(split: str) -> pd.DataFrame:

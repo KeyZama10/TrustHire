@@ -1,0 +1,2 @@
+# Kaggle datasets attached to this job (owner/slug)
+awsaf49/asvpoof-2019-dataset

@@ -29,9 +29,9 @@ class Settings(BaseSettings):
     # per-module model choices (overridable)
     video_backbone: Literal["effnb4", "xception"] = "effnb4"
     video_frames_per_window: int = 3  # subset of the 5 shared face anchors (gpu profile: 8)
-    audio_model: Literal["aasist", "aasist_l", "spectra0", "spectra0_int8"] = (
-        "spectra0_int8"  # see results/audio
-    )
+    audio_model: Literal[
+        "aasist", "aasist_l", "spectra0", "spectra0_int8", "spectra0_ft", "spectra0_ft_int8"
+    ] = "spectra0_int8"  # see results/audio
     whisper_model: str = "small"  # gpu profile: large-v3-turbo
     whisper_compute_type: str = "int8"
     face_det_size: int = 320

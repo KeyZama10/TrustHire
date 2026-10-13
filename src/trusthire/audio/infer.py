@@ -107,10 +107,14 @@ class Spectra0Backend(_Backend):
         return _softmax_spoof(np.concatenate(out))
 
 
-def spectra0_int8_path() -> Path:
+def spectra0_int8_path(src: Path | None = None) -> Path:
     """Dynamic int8 quantisation of Spectra-0 (weights only) for CPU deployment; created on first use."""
-    src = models_dir() / "audio" / "spectra0" / "spectra-0.onnx"
-    dst = src.with_name("spectra-0.int8.onnx")
+    src = src or models_dir() / "audio" / "spectra0" / "spectra-0.onnx"
+    dst = (
+        src.with_name(src.stem + ".int8.onnx")
+        if src.stem != "spectra-0"
+        else src.with_name("spectra-0.int8.onnx")
+    )
     if not dst.exists():
         from onnxruntime.quantization import QuantType, quantize_dynamic
 
@@ -153,6 +157,16 @@ def build_backend(name: str) -> _Backend:
     if name == "spectra0_int8":
         be = Spectra0Backend(spectra0_int8_path())
         be.name = "spectra0_int8"
+        return be
+    if name in ("spectra0_ft", "spectra0_ft_int8"):
+        # reverb/noise-robust fine-tune from kaggle/audio_reverb_ft (scripts/kaggle_job.py fetch audio_reverb_ft)
+        ft = models_dir() / "audio" / "spectra0" / "spectra0_ft.onnx"
+        if not ft.exists():
+            raise FileNotFoundError(
+                f"{ft} missing — run the Kaggle job audio_reverb_ft and copy its ONNX here"
+            )
+        be = Spectra0Backend(spectra0_int8_path(ft) if name.endswith("int8") else ft)
+        be.name = name
         return be
     raise ValueError(name)
 
